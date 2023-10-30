@@ -22,7 +22,7 @@
     "typeRoots": [
       "./node_modules/@types",
       "./node_modules/@webflow",
-      "./node_modules/vite"
+      "./node_modules/@fortawesome"
     ]
   },
   "include": ["src"],
