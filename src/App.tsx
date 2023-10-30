@@ -1,4 +1,3 @@
-import './App.css'
 import { useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
 
@@ -20,6 +19,20 @@ const GET_ICONS_QUERY = gql`
   }
 `;
 
+type Icon = {
+  id: string;
+  familyStylesByLicense: {
+    free: Array<{
+      family: string;
+      style: string;
+    }>;
+    pro: Array<{
+      family: string;
+      style: string;
+    }>;
+  };
+};
+
 export default function App() {
   const [searchValue, setSearchValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('a');
@@ -30,11 +43,11 @@ export default function App() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error.message}</p>;
 
-  const searchResults = (data?.search || []).filter((result: any) => {
+  const searchResults = (data?.search || []).filter((result: Icon) => {
     return result.familyStylesByLicense.free.length > 0;
   });
 
-  const addToCanvas = async (icon: any) => {
+  const addToCanvas = async (icon: Icon) => {
     const element = await webflow.getSelectedElement();
     if (!element) {
       await webflow.notify({
@@ -44,7 +57,7 @@ export default function App() {
       return;
     }
 
-    let iconElement = webflow.createDOM('i');
+    const iconElement = webflow.createDOM('i');
     iconElement.setAttribute(
       'class',
       `fa-${icon.familyStylesByLicense.free[0].style} fa-${icon.id}`
@@ -56,7 +69,7 @@ export default function App() {
   };
 
   return (
-    <main>
+    <main className="bg-wf-bg text-wf-text-2">
       <h1>icon finder</h1>
       <div>
         <input
@@ -70,7 +83,7 @@ export default function App() {
       </div>
 
       <ul>
-        {searchResults.map((icon: any) => {
+        {searchResults.map((icon: Icon) => {
           return (
             <li key={icon.id}>
               {icon.id}
