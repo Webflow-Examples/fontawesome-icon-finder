@@ -1,17 +1,20 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
-
-import { buildAndAppendIcon } from './icon-builder';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
+import { fab } from '@fortawesome/free-brands-svg-icons';
 import {
   library,
   icon as faIcon,
   findIconDefinition,
-  IconPrefix,
   IconName,
+  dom,
 } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { far } from '@fortawesome/free-regular-svg-icons';
-import { fab } from '@fortawesome/free-brands-svg-icons';
+
+import { buildAndAppendIcon } from './build-and-append-icon';
+import { transformIconPrefix } from './transform-icon-prefix';
+import { getFaCssStyleRules } from './get-fa-css-style-rules';
+
 library.add(fas, far, fab);
 
 const GET_ICONS_QUERY = gql`
@@ -54,6 +57,7 @@ export default function App() {
   const { loading, error, data } = useQuery(GET_ICONS_QUERY, {
     variables: { searchQuery },
   });
+  const [cssStyleRules] = useState(() => getFaCssStyleRules());
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error.message}</p>;
@@ -73,86 +77,26 @@ export default function App() {
     }
 
     const iconName = icon.id as IconName;
-    const style = icon.familyStylesByLicense.free[0].style;
-
-    let prefix = '' as IconPrefix;
-    switch (style) {
-      case 'solid':
-        prefix = 'fas';
-        break;
-      case 'regular':
-        prefix = 'far';
-        break;
-      case 'light':
-        prefix = 'fal';
-        break;
-      case 'thin':
-        prefix = 'fat';
-        break;
-      case 'duotone':
-        prefix = 'fad';
-        break;
-      case 'brands':
-        prefix = 'fab';
-        break;
-      case 'knockout':
-        prefix = 'fak';
-        break;
-      case 'solid-style':
-        prefix = 'fass';
-        break;
-      case 'regular-style':
-        prefix = 'fasr';
-        break;
-      case 'light-style':
-        prefix = 'fasl';
-        break;
-      default:
-        prefix = 'fas';
-        break;
-    }
+    const prefix = transformIconPrefix(
+      icon.familyStylesByLicense.free[0].style
+    );
 
     const iconDef = findIconDefinition({ prefix, iconName });
     const i = faIcon(iconDef);
-    if (!i || !i.abstract.length) {
+    if (!i?.abstract?.length) {
+      await webflow.notify({
+        type: 'Error',
+        message: 'Unable to complete request. Please select a different icon.',
+      });
       return;
     }
 
-    await buildAndAppendIcon(i, element);
 
-    // i.abstract.forEach(async node => {
-    //   const nodeElement = webflow.createDOM(node.tag);
-    //   const attributes = node.attributes;
-    //   Object.keys(attributes).forEach(attrKey => {
-    //     nodeElement.setAttribute(attrKey, attributes[attrKey]);
-    //   });
-
-    //   const children = node.children;
-    //   if (children?.length) {
-    //     children.forEach(child => {
-    //       const childElement = webflow.createDOM(child.tag);
-    //       const childAttributes = child.attributes;
-    //       Object.keys(childAttributes).forEach(attrKey => {
-    //         childElement.setAttribute(attrKey, childAttributes[attrKey]);
-    //       });
-    //       nodeElement.setChildren([childElement]);
-    //     });
-    //   }
-
-    //   if (element.configurable && element.children) {
-    //     element.setChildren([nodeElement]);
-    //     await element.save();
-    //   }
-    // });
-
-    // Loop through each node and appending it to the DOM body
-    // Array.from(i.node).map(n => document.body.appendChild(n));
-
-    // iconElement.setAttribute('class', `fa-${style} fa-${icon.id}`);
-    // if (element.configurable && element.children) {
-    //   element.setChildren([iconElement]);
-    //   await element.save();
-    // }
+    const allClasses = await buildAndAppendIcon(i, element);
+    console.log({ cssStyleRules, allClasses });
+    allClasses.forEach(className => {
+      // cssStyleRules
+    });
   };
   console.log('searchResults', searchResults);
   return (
