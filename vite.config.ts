@@ -62,5 +62,5 @@ function webflowExtension(manifest: Manifest) {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), webflowExtension({ name: 'icon-finder', size: 'large' })],
+  plugins: [react(), webflowExtension({ name: 'icon-finder', size: 'comfortable' })],
 });

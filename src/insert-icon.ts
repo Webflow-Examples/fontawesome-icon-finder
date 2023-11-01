@@ -1,40 +1,28 @@
 import { Icon, AbstractElement } from '@fortawesome/fontawesome-svg-core';
-import { createClassName } from './styles';
 
 const createElementWithAttributes = (
   node: AbstractElement
-): { domElement: DOMElement; classList: Array<string> } => {
-  const classList = [] as Array<string>;
+): { domElement: DOMElement } => {
   const domElement = webflow.createDOM(node.tag);
   const attributes = node.attributes;
   Object.keys(attributes).forEach(attrKey => {
-    let value = attributes[attrKey];
+    const value = attributes[attrKey];
     if (attrKey === 'class') {
-      const classes = value.split(' ');
-      classList.push(...classes);
-      value = classes.map((cls: string) => createClassName(cls)).join(' ');
+      return;
     }
     domElement.setAttribute(attrKey, value);
   });
-  return { domElement, classList };
+  return { domElement };
 };
 
-export async function insertIcon(
-  icon: Icon,
-  element: AnyElement
-): Promise<Array<string>> {
-  const allClasses = [];
-
+export async function insertIcon(icon: Icon, element: AnyElement) {
   for (const node of icon.abstract) {
-    const { domElement, classList } = createElementWithAttributes(node);
-    allClasses.push(...classList);
+    const { domElement } = createElementWithAttributes(node);
 
     const children = node.children;
     if (children?.length) {
       children.forEach(child => {
-        const { domElement: childElement, classList: childClassList } =
-          createElementWithAttributes(child);
-        allClasses.push(...childClassList);
+        const { domElement: childElement } = createElementWithAttributes(child);
         domElement.setChildren([childElement]);
       });
     }
@@ -44,6 +32,4 @@ export async function insertIcon(
       await element.save();
     }
   }
-
-  return allClasses;
 }
