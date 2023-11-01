@@ -1,4 +1,5 @@
 import { Icon, AbstractElement } from '@fortawesome/fontawesome-svg-core';
+import { createClassName } from './styles';
 
 const createElementWithAttributes = (
   node: AbstractElement
@@ -7,17 +8,18 @@ const createElementWithAttributes = (
   const domElement = webflow.createDOM(node.tag);
   const attributes = node.attributes;
   Object.keys(attributes).forEach(attrKey => {
-    const value = attributes[attrKey];
+    let value = attributes[attrKey];
     if (attrKey === 'class') {
       const classes = value.split(' ');
       classList.push(...classes);
+      value = classes.map((cls: string) => createClassName(cls)).join(' ');
     }
     domElement.setAttribute(attrKey, value);
   });
   return { domElement, classList };
 };
 
-export async function buildAndAppendIcon(
+export async function insertIcon(
   icon: Icon,
   element: AnyElement
 ): Promise<Array<string>> {

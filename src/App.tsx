@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
@@ -8,12 +8,12 @@ import {
   icon as faIcon,
   findIconDefinition,
   IconName,
-  dom,
 } from '@fortawesome/fontawesome-svg-core';
 
-import { buildAndAppendIcon } from './build-and-append-icon';
+import { insertIcon } from './insert-icon';
 import { transformIconPrefix } from './transform-icon-prefix';
 import { getFaCssStyleRules } from './get-fa-css-style-rules';
+import { createStyleRules } from './create-style-rules';
 
 library.add(fas, far, fab);
 
@@ -91,12 +91,9 @@ export default function App() {
       return;
     }
 
-
-    const allClasses = await buildAndAppendIcon(i, element);
+    const allClasses = await insertIcon(i, element);
     console.log({ cssStyleRules, allClasses });
-    allClasses.forEach(className => {
-      // cssStyleRules
-    });
+    await createStyleRules(allClasses);
   };
   console.log('searchResults', searchResults);
   return (

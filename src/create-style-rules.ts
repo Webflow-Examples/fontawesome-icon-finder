@@ -1,49 +1,31 @@
+import { createClassName } from './styles';
+
 const CLASS_PREFIX = 'wffa-';
 
-export async function createStyleRules(
-  classes: Array<string>,
-  cssStyleRules: Array<CSSStyleRule>
-) {
+const FONT_AWESOME_STYLES = {
+  '.svg-inline--fa': {
+    display: 'inline-block',
+    height: '1em',
+    'overflow-x': 'visible',
+    'overflow-y': 'visible',
+    'vertical-align': '-0.125em',
+  },
+} as { [key: string]: { [key: string]: string } };
+
+export async function createStyleRules(classes: Array<string>) {
   for (const ogClassName of classes) {
+    if (!FONT_AWESOME_STYLES[ogClassName]) {
+      continue;
+    }
+
     const className = CLASS_PREFIX + ogClassName;
     const existingStyle = await webflow.getStyleByName(className);
     if (existingStyle) {
       continue;
     }
 
-    const newStyle = webflow.createStyle(className);
-    const styleRule = cssStyleRules.find(
-      rule => rule.selectorText === `.${ogClassName}`
-    );
-
-    if (!styleRule) {
-      continue;
-    }
-
-    Array.from(styleRule).forEach(key => {
-      const val = styleRule[key];
-      console.log(key, val);
-    });
-
-    Array.from(styleRule.styleMap).forEach(style => {
-      const key = style[0];
-      let val = Array.from(style[1])[0];
-      if (val instanceof CSSUnparsedValue) {
-        const variable = val[0] as CSSVariableReferenceValue;
-        if (!variable.fallback) {
-          return;
-        }
-
-        val = String(variable.fallback[0]).trim();
-      } else {
-        if (val instanceof CSSUnitValue) {
-          val = val.value + val.unit;
-        } else if (val instanceof CSSKeywordValue) {
-          val = val.value;
-        }
-      }
-
-      console.log({ key, val });
-    });
+    const style = webflow.createStyle(createClassName(ogClassName));
+    style.setProperties(FONT_AWESOME_STYLES[ogClassName]);
+    await style.save();
   }
 }
