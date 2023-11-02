@@ -15,9 +15,34 @@ const createElementWithAttributes = (
   return { domElement };
 };
 
-export async function insertIcon(icon: Icon, element: AnyElement) {
+const addStyleToElement = async (
+  element: DOMElement,
+  color: string
+): Promise<DOMElement> => {
+  const className = `FA Icon ${color.replace('#', '')}`;
+  let style = await webflow.getStyleByName(className);
+
+  if (!style) {
+    // create the style if it doesn't already exist
+    style = webflow.createStyle(className);
+    style.setProperty('color', color);
+    await style.save();
+  }
+
+  element.setStyles([style]);
+  return element;
+};
+
+export async function insertIcon(
+  icon: Icon,
+  element: AnyElement,
+  color: string
+) {
   for (const node of icon.abstract) {
-    const { domElement } = createElementWithAttributes(node);
+    let { domElement } = createElementWithAttributes(node);
+    if (node.tag === 'svg') {
+      domElement = await addStyleToElement(domElement, color);
+    }
 
     const children = node.children;
     if (children?.length) {

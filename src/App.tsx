@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useQuery, gql } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
@@ -12,28 +12,9 @@ import {
 
 import { insertIcon } from './insert-icon';
 import { transformIconPrefix } from './transform-icon-prefix';
+import { GET_ICONS_QUERY } from './query';
 
 library.add(fas, far, fab);
-
-const GET_ICONS_QUERY = gql`
-  query ($searchQuery: String!) {
-    search(version: "6.0.0", query: $searchQuery, first: 100) {
-      id
-      label
-      unicode
-      familyStylesByLicense {
-        free {
-          family
-          style
-        }
-        pro {
-          family
-          style
-        }
-      }
-    }
-  }
-`;
 
 type Icon = {
   id: string;
@@ -53,6 +34,8 @@ type Icon = {
 export default function App() {
   const [searchValue, setSearchValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('a');
+  const [color, setColor] = useState('#ffffff');
+
   const { loading, error, data } = useQuery(GET_ICONS_QUERY, {
     variables: { searchQuery },
   });
@@ -88,31 +71,43 @@ export default function App() {
       return;
     }
 
-    await insertIcon(i, element);
+    await insertIcon(i, element, color);
   };
 
   return (
     <main className="bg-wf-almostBlack text-wf-text p-2 font-body flex gap-y-2 flex-col">
       <div className="flex gap-y-2 flex-col">
-        {/* <h1 className="text-lg font-medium">Font Awesome Icon Finder</h1> */}
+        <div className="flex gap-2 flex-col">
+          <div className="flex gap-x-2">
+            <input
+              type="text"
+              value={searchValue}
+              onChange={e => setSearchValue(e.target.value)}
+              className="border-wf-border-color border border-solid grow text-base bg-wf-input-color rounded px-2 py-1 focus:shadow-wf-input focus:outline-none"
+              placeholder="Enter an icon name..."
+              disabled={loading}
+            />
+            <button
+              type="button"
+              onClick={() => setSearchQuery(searchValue)}
+              className="bg-wf-grey rounded px-3 text-xs text-wf-text-secondary"
+              disabled={loading}
+            >
+              Search
+            </button>
+          </div>
 
-        <div className="flex gap-x-2">
-          <input
-            type="text"
-            value={searchValue}
-            onChange={e => setSearchValue(e.target.value)}
-            className="border-wf-border-color border border-solid grow text-base bg-wf-input-color rounded px-2 py-1 focus:shadow-wf-input focus:outline-none"
-            placeholder="Enter an icon name..."
-            disabled={loading}
-          />
-          <button
-            type="button"
-            onClick={() => setSearchQuery(searchValue)}
-            className="bg-wf-grey rounded px-3 text-xs text-wf-text-secondary"
-            disabled={loading}
-          >
-            Search
-          </button>
+          <div className="flex gap-x-2 items-center">
+            <label htmlFor="colorPicker" className="text-xs">
+              Set color
+            </label>
+            <input
+              type="color"
+              value={color}
+              id="colorPicker"
+              onChange={e => setColor(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 
@@ -131,7 +126,8 @@ export default function App() {
                   className="flex flex-col gap-y-2 grow justify-center items-center hover:opacity-80"
                 >
                   <i
-                    className={`block text-white fa-2x fa-${icon.familyStylesByLicense.free[0].style} fa-${icon.id}`}
+                    className={`block fa-2x fa-${icon.familyStylesByLicense.free[0].style} fa-${icon.id}`}
+                    style={{ color }}
                   />
                   <span className="line-clamp-2 text-xs text-white">
                     {icon.label}
