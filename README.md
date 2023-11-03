@@ -1,27 +1,14 @@
-# React + TypeScript + Vite
+# Font Awesome Icon Finder (Webflow App)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Webflow App using the [Designer API](https://docs.developers.webflow.com/reference/designer-api-reference).
 
-Currently, two official plugins are available:
+Built using Vite + React + Apollo + Font Awesome GraphQL API + Font Awesome SDK.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Local Development
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+1. [Create & install an App within Webflow](https://docs.developers.webflow.com/docs/register-an-app)
+2. Install npm dependencies via `npm install`
+3. Install the webflow-cli: `npm i @webflow/webflow-cli -g`
+4. Run `npm run dev`. It'll output a localhost url in the terminal.
+5. Open up the Webflow Designer, open up the Apps panel, and click your App your created in step 1
+6. Enter in the url from step 4 into the Development URL field and click "Launch development App"
