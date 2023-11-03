@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react-swc';
 type Manifest = {
   size: 'comfortable' | 'large' | 'default';
   name: string;
+  publicDir?: string;
 };
 
 function webflowExtension(manifest: Manifest) {
