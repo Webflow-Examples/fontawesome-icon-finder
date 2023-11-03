@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, SyntheticEvent } from 'react';
 import { useQuery } from '@apollo/client';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
@@ -32,7 +32,7 @@ type Icon = {
 };
 
 export default function App() {
-  const [searchValue, setSearchValue] = useState('');
+  const [inputValue, setInputValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('a');
   const [color, setColor] = useState('#ffffff');
 
@@ -45,6 +45,15 @@ export default function App() {
   const searchResults = (data?.search || []).filter((result: Icon) => {
     return result.familyStylesByLicense.free.length > 0;
   });
+
+  const handleFormSearch = (event: SyntheticEvent) => {
+    event.preventDefault();
+    setSearchQuery(inputValue);
+  };
+
+  const handleClearInput = () => {
+    setInputValue('');
+  };
 
   const addToCanvas = async (icon: Icon) => {
     const element = await webflow.getSelectedElement();
@@ -75,27 +84,35 @@ export default function App() {
   };
 
   return (
-    <main className="bg-wf-almostBlack text-wf-text p-2 font-body flex gap-y-2 flex-col">
-      <div className="flex gap-y-2 flex-col">
+    <main className="bg-wf-almostBlack text-wf-text p-2 pt-0 font-body flex gap-y-2 flex-col">
+      <div className="flex gap-y-2 flex-col sticky top-0 py-2 bg-wf-almostBlack z-10">
         <div className="flex gap-2 flex-col">
-          <div className="flex gap-x-2">
-            <input
-              type="text"
-              value={searchValue}
-              onChange={e => setSearchValue(e.target.value)}
-              className="border-wf-border-color border border-solid grow text-base bg-wf-input-color rounded px-2 py-1 focus:shadow-wf-input focus:outline-none"
-              placeholder="Enter an icon name..."
-              disabled={loading}
-            />
+          <form className="flex gap-x-2" onSubmit={handleFormSearch}>
+            <div className="relative grow">
+              <input
+                type="text"
+                value={inputValue}
+                onChange={e => setInputValue(e.target.value)}
+                className="w-full border-wf-border-color border border-solid text-base bg-wf-input-color rounded px-2 py-1 focus:shadow-wf-input focus:outline-none"
+                placeholder="Enter an icon name..."
+                disabled={loading}
+              />
+              <button
+                type="button"
+                onClick={handleClearInput}
+                className="text-white absolute right-1 h-full"
+              >
+                <i className="fa-solid fa-xmark" />
+              </button>
+            </div>
             <button
-              type="button"
-              onClick={() => setSearchQuery(searchValue)}
+              type="submit"
               className="bg-wf-grey rounded px-3 text-xs text-wf-text-secondary"
               disabled={loading}
             >
               Search
             </button>
-          </div>
+          </form>
 
           <div className="flex gap-x-2 items-center">
             <label htmlFor="colorPicker" className="text-xs">
