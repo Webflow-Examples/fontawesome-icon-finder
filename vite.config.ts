@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import fs from 'fs';
 import react from '@vitejs/plugin-react-swc';
 
 type Manifest = {
@@ -7,7 +8,7 @@ type Manifest = {
 };
 
 function webflowExtension(manifest: Manifest) {
-  const domain = 'extensions.wfdev.io:8443'; // 'webflow-ext.com';
+  const domain = 'webflow-ext.com';
   const templatePromise = fetch(
     `https://${domain}/template?name=${manifest.name}`
   )
@@ -60,7 +61,7 @@ function webflowExtension(manifest: Manifest) {
   };
 }
 
-// https://vitejs.dev/config/
+const webflowManifest = JSON.parse(fs.readFileSync('webflow.json', 'utf8'));
 export default defineConfig({
-  plugins: [react(), webflowExtension({ name: 'icon-finder', size: 'comfortable' })],
+  plugins: [react(), webflowExtension(webflowManifest)],
 });
