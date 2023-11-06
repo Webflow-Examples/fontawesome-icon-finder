@@ -36,12 +36,14 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('a');
   const [color, setColor] = useState('#ffffff');
 
+  // fetch icons from Font Awesome API
   const { loading, error, data } = useQuery(GET_ICONS_QUERY, {
     variables: { searchQuery },
   });
 
   if (error) return <p>Error : {error.message}</p>;
 
+  // filter out icons that aren't free
   const searchResults = (data?.search || []).filter((result: Icon) => {
     return result.familyStylesByLicense.free.length > 0;
   });
@@ -56,6 +58,7 @@ export default function App() {
   };
 
   const addToCanvas = async (icon: Icon) => {
+    // get the currently selected element within the Webflow Designer
     const element = await webflow.getSelectedElement();
     if (!element) {
       await webflow.notify({
@@ -66,13 +69,15 @@ export default function App() {
     }
 
     const iconName = icon.id as IconName;
+    // convert the icon style from the API to match how they are referenced in the Font Awesome library
     const prefix = transformIconPrefix(
       icon.familyStylesByLicense.free[0].style
     );
 
+    // findIconDefinition and faIcon are from the Font Awesome library and used to get the icon node data
     const iconDef = findIconDefinition({ prefix, iconName });
-    const i = faIcon(iconDef);
-    if (!i?.abstract?.length) {
+    const icn = faIcon(iconDef);
+    if (!icn?.abstract?.length) {
       await webflow.notify({
         type: 'Error',
         message: 'Unable to complete request. Please select a different icon.',
@@ -80,7 +85,8 @@ export default function App() {
       return;
     }
 
-    await insertIcon(i, element, color);
+    // finally, call insertIcon to insert the icon into the Webflow Designer
+    await insertIcon(icn, element, color);
   };
 
   return (
