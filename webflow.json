@@ -1,5 +1,6 @@
 {
   "name": "fontawesome-icon-finder",
   "size": "comfortable",
-  "publicDir": "dist"
+  "publicDir": "dist",
+  "apiVersion": "2"
 }

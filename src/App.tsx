@@ -1,18 +1,18 @@
-import { useState, SyntheticEvent } from 'react';
-import { useQuery } from '@apollo/client';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { far } from '@fortawesome/free-regular-svg-icons';
-import { fab } from '@fortawesome/free-brands-svg-icons';
+import { useState, SyntheticEvent } from "react";
+import { useQuery } from "@apollo/client";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { far } from "@fortawesome/free-regular-svg-icons";
+import { fab } from "@fortawesome/free-brands-svg-icons";
 import {
   library,
   icon as faIcon,
   findIconDefinition,
   IconName,
-} from '@fortawesome/fontawesome-svg-core';
+} from "@fortawesome/fontawesome-svg-core";
 
-import { insertIcon } from './insert-icon';
-import { transformIconPrefix } from './transform-icon-prefix';
-import { GET_ICONS_QUERY } from './query';
+import { insertIcon } from "./insert-icon";
+import { transformIconPrefix } from "./transform-icon-prefix";
+import { GET_ICONS_QUERY } from "./query";
 
 library.add(fas, far, fab);
 
@@ -32,9 +32,9 @@ type Icon = {
 };
 
 export default function App() {
-  const [inputValue, setInputValue] = useState('');
-  const [searchQuery, setSearchQuery] = useState('a');
-  const [color, setColor] = useState('#ffffff');
+  const [inputValue, setInputValue] = useState("");
+  const [searchQuery, setSearchQuery] = useState("a");
+  const [color, setColor] = useState("#ffffff");
 
   // fetch icons from Font Awesome API
   const { loading, error, data } = useQuery(GET_ICONS_QUERY, {
@@ -54,7 +54,7 @@ export default function App() {
   };
 
   const handleClearInput = () => {
-    setInputValue('');
+    setInputValue("");
   };
 
   const addToCanvas = async (icon: Icon) => {
@@ -62,8 +62,8 @@ export default function App() {
     const element = await webflow.getSelectedElement();
     if (!element) {
       await webflow.notify({
-        type: 'Error',
-        message: 'Please select an element first and try again.',
+        type: "Error",
+        message: "Please select an element first and try again.",
       });
       return;
     }
@@ -79,8 +79,8 @@ export default function App() {
     const icn = faIcon(iconDef);
     if (!icn?.abstract?.length) {
       await webflow.notify({
-        type: 'Error',
-        message: 'Unable to complete request. Please select a different icon.',
+        type: "Error",
+        message: "Unable to complete request. Please select a different icon.",
       });
       return;
     }
@@ -98,7 +98,7 @@ export default function App() {
               <input
                 type="text"
                 value={inputValue}
-                onChange={e => setInputValue(e.target.value)}
+                onChange={(e) => setInputValue(e.target.value)}
                 className="w-full border-wf-border-color border border-solid text-base bg-wf-input-color rounded px-2 py-1 focus:shadow-wf-input focus:outline-none"
                 placeholder="Enter an icon name..."
                 disabled={loading}
@@ -128,7 +128,7 @@ export default function App() {
               type="color"
               value={color}
               id="colorPicker"
-              onChange={e => setColor(e.target.value)}
+              onChange={(e) => setColor(e.target.value)}
             />
           </div>
         </div>
