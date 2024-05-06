@@ -1,4 +1,4 @@
-import { Icon, AbstractElement } from "@fortawesome/fontawesome-svg-core";
+import { Icon, AbstractElement } from '@fortawesome/fontawesome-svg-core';
 
 const createElementWithAttributes = async (
   node: AbstractElement,
@@ -10,7 +10,7 @@ const createElementWithAttributes = async (
   const attributePromises: Promise<null>[] = [];
   Object.keys(attributes).forEach((attrKey) => {
     const value = attributes[attrKey];
-    if (attrKey === "class") {
+    if (attrKey === 'class') {
       // skip adding class attributes because we don't have the css that goes with it
       return;
     }
@@ -25,14 +25,14 @@ const addStyleToElement = async (
   element: DOMElement,
   color: string
 ): Promise<DOMElement> => {
-  const className = `FA Icon ${color.replace("#", "")}`;
+  const className = `FA Icon ${color.replace('#', '')}`;
   // check if the style already exists
   let style = await webflow.getStyleByName(className);
 
   if (!style) {
     // create the style if it doesn't already exist
     style = await webflow.createStyle(className);
-    await style.setProperty("color", color);
+    await style.setProperty('color', color);
   }
 
   // set the styles on the DOM element
@@ -47,8 +47,8 @@ export async function insertIcon(
 ) {
   if (!element.children) {
     await webflow.notify({
-      type: "Error",
-      message: "Cannot append an SVG here",
+      type: 'Error',
+      message: 'Cannot append an SVG here',
     });
     return;
   }
@@ -59,7 +59,7 @@ export async function insertIcon(
       node,
       newDomElement
     );
-    if (node.tag === "svg") {
+    if (node.tag === 'svg') {
       // add the color to the svg element and return the same element so we can keep working with it below
       modifiedElement = await addStyleToElement(modifiedElement, color);
     }
