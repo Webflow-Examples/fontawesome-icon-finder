@@ -6,7 +6,6 @@ Built using Vite + React + Apollo + Font Awesome GraphQL API + Font Awesome SDK.
 
 ![Webflow FontAwesome App](https://github.com/Webflow-Examples/fontawesome-icon-finder/assets/2854919/6ad4fa88-b50e-42ff-9ce2-38ba0bb1527f)
 
-
 ## Local Development
 
 1. [Create & install an App within Webflow](https://docs.developers.webflow.com/docs/register-an-app)

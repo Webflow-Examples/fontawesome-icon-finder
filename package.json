@@ -7,7 +7,8 @@
     "dev": "concurrently -r \"webflow extension serve\" \"vite\"",
     "build": "tsc && vite build && node postbuild.js && webflow extension bundle",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@apollo/client": "^3.8.6",
