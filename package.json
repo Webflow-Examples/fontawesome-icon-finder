@@ -27,7 +27,7 @@
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react-swc": "^3.3.2",
-    "@webflow/designer-extension-typings": "^0.1.10",
+    "@webflow/designer-extension-typings": "^0.2.0-beta.9",
     "autoprefixer": "^10.4.16",
     "concurrently": "^8.2.2",
     "eslint": "^8.45.0",

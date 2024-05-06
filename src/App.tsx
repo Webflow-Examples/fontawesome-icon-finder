@@ -98,7 +98,7 @@ export default function App() {
               <input
                 type="text"
                 value={inputValue}
-                onChange={e => setInputValue(e.target.value)}
+                onChange={(e) => setInputValue(e.target.value)}
                 className="w-full border-wf-border-color border border-solid text-base bg-wf-input-color rounded px-2 py-1 focus:shadow-wf-input focus:outline-none"
                 placeholder="Enter an icon name..."
                 disabled={loading}
@@ -128,7 +128,7 @@ export default function App() {
               type="color"
               value={color}
               id="colorPicker"
-              onChange={e => setColor(e.target.value)}
+              onChange={(e) => setColor(e.target.value)}
             />
           </div>
         </div>

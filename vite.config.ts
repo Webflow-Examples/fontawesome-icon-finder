@@ -11,9 +11,9 @@ type Manifest = {
 function webflowExtension(manifest: Manifest) {
   const domain = 'webflow-ext.com';
   const templatePromise = fetch(
-    `https://${domain}/template?name=${manifest.name}`
+    `https://${domain}/template/v2?name=${manifest.name}`
   )
-    .then(res => res.text())
+    .then((res) => res.text())
     .catch(() => console.log('Failed retrieving template'));
 
   const headRegex = /<head[^>]*>([\s\S]*?)<\/head>/i;
